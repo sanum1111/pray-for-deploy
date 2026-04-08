@@ -16,11 +16,7 @@
             --muted: #888;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             min-height: 100vh;
@@ -34,17 +30,33 @@
         }
 
         h1 {
-            margin-bottom: 32px;
+            margin-bottom: 16px;
             font-size: clamp(1.6rem, 3vw, 2.4rem);
             text-align: center;
             letter-spacing: 0.04em;
         }
 
         .subtitle {
-            margin-top: 8px;
+            margin-top: 4px;
             font-size: 0.9rem;
             color: var(--muted);
             text-align: center;
+        }
+
+        .head {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        select {
+            padding: 6px 10px;
+            background: #111;
+            color: var(--text);
+            border: 1px solid #333;
+            border-radius: 6px;
+            font-size: 0.9rem;
         }
 
         .candle-wrapper {
@@ -56,36 +68,32 @@
             user-select: none;
         }
 
+        /* BASE CANDLE */
         .candle {
             position: relative;
             width: 80px;
             height: 160px;
-            background: linear-gradient(180deg, #fdfaf3 0%, var(--wax) 40%, #d7d0c0 100%);
             border-radius: 40px 40px 18px 18px;
-            box-shadow:
-                    0 0 0 1px rgba(255, 255, 255, 0.08),
-                    0 18px 40px rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: flex-start;
             justify-content: center;
             padding-top: 26px;
+            transition: 0.3s ease;
         }
 
         .candle::after {
-            /* melted wax edge */
             content: "";
             position: absolute;
             top: 22px;
             left: 10px;
             right: 10px;
-            height: 10px;
+            height: 40px;
             border-radius: 50%;
             background: radial-gradient(circle at top, #fffdf7 0, #e8e1d2 55%, transparent 70%);
             opacity: 0.9;
         }
 
         .wick {
-            position: relative;
             width: 4px;
             height: 18px;
             background: linear-gradient(180deg, #000, #444);
@@ -100,7 +108,6 @@
             transform: translateX(-50%);
             width: 26px;
             height: 42px;
-            transform-origin: 50% 100%;
             opacity: 0;
             pointer-events: none;
         }
@@ -108,12 +115,11 @@
         .flame-core {
             position: absolute;
             inset: 0;
-            border-radius: 50% 50% 50% 50%;
+            border-radius: 50%;
             transform: scaleY(1.2) rotate(12deg);
             background:
                     radial-gradient(circle at 30% 20%, #fff 0, var(--flame-inner) 40%, transparent 70%),
                     radial-gradient(circle at 70% 80%, var(--flame-outer) 0, transparent 70%);
-            filter: blur(0.4px);
         }
 
         .flame-glow {
@@ -122,56 +128,28 @@
             border-radius: 50%;
             background: radial-gradient(circle, rgba(255, 180, 80, 0.45) 0, transparent 65%);
             mix-blend-mode: screen;
-            opacity: 0.9;
         }
 
-        .candle-lit .flame {
-            opacity: 1;
-            animation: flame-flicker 1.4s infinite ease-in-out alternate;
-        }
-
-        .candle-lit .flame-core {
-            animation: flame-shape 1.2s infinite ease-in-out alternate;
-        }
-
-        .candle-lit .flame-glow {
-            animation: flame-glow 1.6s infinite ease-in-out alternate;
-        }
+        .candle-lit .flame { opacity: 1; animation: flame-flicker 1.4s infinite ease-in-out alternate; }
+        .candle-lit .flame-core { animation: flame-shape 1.2s infinite ease-in-out alternate; }
+        .candle-lit .flame-glow { animation: flame-glow 1.6s infinite ease-in-out alternate; }
 
         @keyframes flame-flicker {
-            0% {
-                transform: translateX(-50%) translateY(0) scale(1);
-            }
-            50% {
-                transform: translateX(-52%) translateY(-2px) scale(1.05);
-            }
-            100% {
-                transform: translateX(-48%) translateY(1px) scale(0.97);
-            }
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-52%) scale(1.05); }
+            100% { transform: translateX(-48%) scale(0.97); }
         }
 
         @keyframes flame-shape {
-            0% {
-                transform: scaleY(1.15) rotate(10deg);
-            }
-            50% {
-                transform: scaleY(1.3) rotate(6deg);
-            }
-            100% {
-                transform: scaleY(1.05) rotate(14deg);
-            }
+            0% { transform: scaleY(1.15) rotate(10deg); }
+            50% { transform: scaleY(1.3) rotate(6deg); }
+            100% { transform: scaleY(1.05) rotate(14deg); }
         }
 
         @keyframes flame-glow {
-            0% {
-                opacity: 0.7;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0.6;
-            }
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
         }
 
         .hint {
@@ -180,39 +158,100 @@
             color: var(--muted);
         }
 
-        .head {
+        /* -------------------------
+           CANDLE STYLES (NEW)
+        -------------------------- */
 
+        /* CLASSIC — твій оригінальний */
+        .style-classic {
+            background: linear-gradient(180deg, #fdfaf3 0%, var(--wax) 40%, #d7d0c0 100%);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.7);
         }
+
+        /* WHITE — світла, контрастна */
+        .style-white {
+            background: linear-gradient(180deg, #ffffff 0%, #f7f7f7 40%, #e5e5e5 100%);
+            box-shadow: 0 18px 40px rgba(255,255,255,0.25);
+        }
+        .style-white .wick {
+            background: #333;
+        }
+        .style-white .flame-core {
+            background:
+                    radial-gradient(circle at 30% 20%, #fff 0, #ffd27a 40%, transparent 70%),
+                    radial-gradient(circle at 70% 80%, #ff9b3d 0, transparent 70%);
+        }
+        .style-white .flame-glow {
+            background: radial-gradient(circle, rgba(255, 200, 120, 0.5) 0, transparent 65%);
+        }
+
+        /* GOLD — тепла, яскрава */
+        .style-gold {
+            background: linear-gradient(180deg, #f7d37a 0%, #e6b95a 40%, #c99a3a 100%);
+            box-shadow: 0 0 25px rgba(255, 200, 80, 0.5);
+        }
+        .style-gold .wick {
+            background: #5a3a00;
+        }
+        .style-gold .flame-core {
+            background:
+                    radial-gradient(circle, #fff2b0 0, #ffcf5a 40%, transparent 70%);
+        }
+        .style-gold .flame-glow {
+            background: radial-gradient(circle, rgba(255, 200, 80, 0.6) 0, transparent 70%);
+        }
+
+        /* PASTEL — ніжна, добре видно */
+        .style-pastel {
+            background: linear-gradient(180deg, #ffeef7 0%, #ffd9e9 40%, #f5bcd4 100%);
+            box-shadow: 0 0 25px rgba(255, 150, 200, 0.4);
+        }
+        .style-pastel .wick {
+            background: #663344;
+        }
+        .style-pastel .flame-core {
+            background:
+                    radial-gradient(circle, #fff 0, #ffb3d1 40%, transparent 70%);
+        }
+        .style-pastel .flame-glow {
+            background: radial-gradient(circle, rgba(255, 150, 200, 0.5) 0, transparent 70%);
+        }
+
     </style>
 </head>
 <body>
+
 <div class="head">
     <h1 id="project-title">Unnamed project</h1>
     <p class="subtitle">Click the candle to light or extinguish it.</p>
+
+    <select id="style">
+        <option value="classic">Classic</option>
+        <option value="white">White</option>
+        <option value="gold">Gold</option>
+        <option value="pastel">Pastel</option>
+    </select>
+
 </div>
 
 <div class="candle-wrapper" id="candle-toggle">
-    <div class="candle" id="candle">
+    <div class="candle style-classic" id="candle">
         <div class="wick"></div>
         <div class="flame">
             <div class="flame-core"></div>
             <div class="flame-glow"></div>
         </div>
     </div>
-    <div class="hint">
-        Pray for deploy
-    </div>
+    <div class="hint">Pray for deploy</div>
 </div>
 
 <script>
-    // Read project name from ?project=... in location.search
     (function () {
         const params = new URLSearchParams(window.location.search);
         const rawName = params.get("project");
         const titleEl = document.getElementById("project-title");
 
         if (rawName && rawName.trim()) {
-            // decode + basic sanitization
             const name = rawName.replace(/\+/g, " ").trim();
             titleEl.textContent = name + " deployment";
             document.title = name + " – Candle";
@@ -220,15 +259,12 @@
 
         const candle = document.getElementById("candle");
         const wrapper = document.getElementById("candle-toggle");
+        const styleSelect = document.getElementById("style");
 
         let isLit = false;
 
         function render() {
-            if (isLit) {
-                candle.classList.add("candle-lit");
-            } else {
-                candle.classList.remove("candle-lit");
-            }
+            candle.classList.toggle("candle-lit", isLit);
         }
 
         wrapper.addEventListener("click", () => {
@@ -236,8 +272,13 @@
             render();
         });
 
+        styleSelect.addEventListener("change", () => {
+            candle.className = "candle style-" + styleSelect.value + (isLit ? " candle-lit" : "");
+        });
+
         render();
     })();
 </script>
+
 </body>
 </html>
