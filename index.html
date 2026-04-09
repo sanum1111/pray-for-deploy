@@ -23,7 +23,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             background: radial-gradient(circle at top, #151525 0, var(--bg) 55%);
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             color: var(--text);
@@ -49,7 +49,6 @@
             align-items: center;
             gap: 8px;
             min-height: 10em;
-            margin-top: 10em;
         }
 
         select {
@@ -69,8 +68,7 @@
             gap: 16px;
             cursor: pointer;
             user-select: none;
-            min-height: 10em;
-            margin-top: 5em;
+            margin-top: 2em;
         }
 
         /* BASE CANDLE */
@@ -231,6 +229,8 @@
         }
 
         .action-wrapper {
+            position: absolute;
+            bottom: 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -270,26 +270,28 @@
 </head>
 <body>
 
-<div class="head">
-    <h1 id="project-title">Unnamed project</h1>
-    <p class="subtitle">Click the candle to light or extinguish it.</p>
-</div>
-
-<div class="candle-wrapper" id="candle-toggle">
-    <div class="candle style-classic" id="candle">
-        <div class="wick"></div>
-        <div class="flame" id="flame">
-            <div class="flame-core"></div>
-            <div class="flame-glow"></div>
-        </div>
+<div class="main-container">
+    <div class="head">
+        <h1 id="project-title">Unnamed project</h1>
+        <p class="subtitle">Click the candle to light or extinguish it.</p>
     </div>
-    <div class="hint">Pray for deploy</div>
-    <select id="style">
-        <option value="classic">Classic</option>
-        <option value="white">White</option>
-        <option value="gold">Gold</option>
-        <option value="pastel">Pastel</option>
-    </select>
+
+    <div class="candle-wrapper" id="candle-toggle">
+        <div class="candle style-classic" id="candle">
+            <div class="wick"></div>
+            <div class="flame" id="flame">
+                <div class="flame-core"></div>
+                <div class="flame-glow"></div>
+            </div>
+        </div>
+        <div class="hint">Pray for deploy</div>
+        <select id="style">
+            <option value="classic">Classic</option>
+            <option value="white">White</option>
+            <option value="gold">Gold</option>
+            <option value="pastel">Pastel</option>
+        </select>
+    </div>
 </div>
 
 <div class="action-wrapper" id="action">
@@ -310,6 +312,7 @@
 
 <script>
     (function () {
+        const isMono = false;
         const params = new URLSearchParams(window.location.search);
         const rawName = params.get("project");
         const titleEl = document.getElementById("project-title");
@@ -326,17 +329,17 @@
         const styleSelect = document.getElementById("style");
         const action = document.getElementById("action");
         const boostFlameButton = document.getElementById("boost-flame");
-        const boostWidget = document.getElementById("boost-widget");
+        const boostWidget = document.getElementById("action-widget");
 
         let isLit = false;
         let isBoosted = false;
 
         function render() {
             candle.classList.toggle("candle-lit", isLit);
-            if (action) {
+            if (action && isMono) {
                 action.style.display = isLit ? "block" : "none";
             }
-            if (boostFlameButton && action) {
+            if (boostFlameButton && action && isMono) {
                 boostFlameButton.style.display = isLit && !isBoosted ? "inline-block" : "none";
             }
             if (boostWidget) {
