@@ -111,6 +111,10 @@
             opacity: 0;
             pointer-events: none;
         }
+        .flame-boost {
+            width: 52px;
+            height: 84px;
+        }
 
         .flame-core {
             position: absolute;
@@ -217,6 +221,46 @@
             background: radial-gradient(circle, rgba(255, 150, 200, 0.5) 0, transparent 70%);
         }
 
+        #action {
+            display: none;
+        }
+
+        .action-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .action-button {
+            padding: 12px 24px;
+            background: #333;
+            color: var(--text);
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        #action-widget {
+            display: none;
+            margin-top: 16px;
+            width: min(360px, 90vw);
+            border: 1px solid #222;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        #boost-widget iframe {
+            display: block;
+            width: 100%;
+            height: min(470px, 75vh);
+            border: 0;
+        }
+
+
     </style>
 </head>
 <body>
@@ -237,12 +281,28 @@
 <div class="candle-wrapper" id="candle-toggle">
     <div class="candle style-classic" id="candle">
         <div class="wick"></div>
-        <div class="flame">
+        <div class="flame" id="flame">
             <div class="flame-core"></div>
             <div class="flame-glow"></div>
         </div>
     </div>
     <div class="hint">Pray for deploy</div>
+</div>
+
+<div class="action-wrapper" id="action">
+    <button class="action-button" id="boost-flame">boost flame</button>
+    <div id="action-widget">
+        <iframe
+            id="boost-widget-frame"
+            src="https://send.monobank.ua/widget.html?jar=4LD9wHKSAHqwjJfLEoeAue2zryjtmntL&sendId=2JbpBYkhMv&type=qrp&colorScheme=green"
+            width="380px"
+            height="136px"
+            loading="lazy"
+            allow="clipboard-write; payment"
+            referrerpolicy="no-referrer"
+            title="Monobank widget">
+        </iframe>
+    </div>
 </div>
 
 <script>
@@ -258,19 +318,43 @@
         }
 
         const candle = document.getElementById("candle");
+        const flame = document.getElementById("flame");
         const wrapper = document.getElementById("candle-toggle");
         const styleSelect = document.getElementById("style");
+        const action = document.getElementById("action");
+        const boostFlameButton = document.getElementById("boost-flame");
+        const boostWidget = document.getElementById("boost-widget");
 
         let isLit = false;
+        let isBoosted = false;
 
         function render() {
             candle.classList.toggle("candle-lit", isLit);
+            if (action) {
+                action.style.display = isLit ? "block" : "none";
+            }
+            if (boostFlameButton && action) {
+                boostFlameButton.style.display = isLit && !isBoosted ? "inline-block" : "none";
+            }
+            if (boostWidget) {
+                boostWidget.style.display = isBoosted ? "block" : "none";
+            }
         }
 
         wrapper.addEventListener("click", () => {
             isLit = !isLit;
             render();
         });
+
+        if (boostFlameButton) {
+            boostFlameButton.addEventListener("click", () => {
+                isBoosted = true;
+                if (flame) {
+                    flame.classList.add("flame-boost");
+                }
+                render();
+            });
+        }
 
         styleSelect.addEventListener("change", () => {
             candle.className = "candle style-" + styleSelect.value + (isLit ? " candle-lit" : "");
