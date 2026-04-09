@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/ico" href="/favicon.ico" />
     <meta charset="UTF-8" />
     <title>Project Candle</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -223,49 +224,6 @@
         .style-pastel .flame-glow {
             background: radial-gradient(circle, rgba(255, 150, 200, 0.5) 0, transparent 70%);
         }
-
-        #action {
-            display: none;
-        }
-
-        .action-wrapper {
-            position: absolute;
-            bottom: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 16px;
-        }
-
-        .action-button {
-            padding: 12px 24px;
-            background: #333;
-            color: var(--text);
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s ease;
-        }
-
-        #action-widget {
-            display: none;
-            margin-top: 16px;
-            width: min(360px, 90vw);
-            border: 1px solid #222;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.4);
-        }
-
-        #boost-widget iframe {
-            display: block;
-            width: 100%;
-            height: min(470px, 75vh);
-            border: 0;
-        }
-
-
     </style>
 </head>
 <body>
@@ -294,73 +252,32 @@
     </div>
 </div>
 
-<div class="action-wrapper" id="action">
-    <button class="action-button" id="boost-flame">boost flame</button>
-    <div id="action-widget">
-        <iframe
-            id="boost-widget-frame"
-            src="https://send.monobank.ua/widget.html?jar=4LD9wHKSAHqwjJfLEoeAue2zryjtmntL&sendId=2JbpBYkhMv&type=qrp&colorScheme=green"
-            width="380px"
-            height="136px"
-            loading="lazy"
-            allow="clipboard-write; payment"
-            referrerpolicy="no-referrer"
-            title="Monobank widget">
-        </iframe>
-    </div>
-</div>
-
 <script>
     (function () {
-        const isMono = false;
         const params = new URLSearchParams(window.location.search);
         const rawName = params.get("project");
         const titleEl = document.getElementById("project-title");
 
         if (rawName && rawName.trim()) {
             const name = rawName.replace(/\+/g, " ").trim();
-            titleEl.textContent = name + " deployment";
+            titleEl.textContent = name;
             document.title = name + " – Candle";
         }
 
         const candle = document.getElementById("candle");
-        const flame = document.getElementById("flame");
         const wrapper = document.getElementById("candle-toggle");
         const styleSelect = document.getElementById("style");
-        const action = document.getElementById("action");
-        const boostFlameButton = document.getElementById("boost-flame");
-        const boostWidget = document.getElementById("action-widget");
 
         let isLit = false;
-        let isBoosted = false;
 
         function render() {
             candle.classList.toggle("candle-lit", isLit);
-            if (action && isMono) {
-                action.style.display = isLit ? "block" : "none";
-            }
-            if (boostFlameButton && action && isMono) {
-                boostFlameButton.style.display = isLit && !isBoosted ? "inline-block" : "none";
-            }
-            if (boostWidget) {
-                boostWidget.style.display = isBoosted ? "block" : "none";
-            }
         }
 
         wrapper.addEventListener("click", () => {
             isLit = !isLit;
             render();
         });
-
-        if (boostFlameButton) {
-            boostFlameButton.addEventListener("click", () => {
-                isBoosted = true;
-                if (flame) {
-                    flame.classList.add("flame-boost");
-                }
-                render();
-            });
-        }
 
         styleSelect.addEventListener("change", () => {
             candle.className = "candle style-" + styleSelect.value + (isLit ? " candle-lit" : "");
